@@ -23,8 +23,8 @@ rem Open-Source, qualquer informação pode ser obtida no código do arquivo!
 
 set "userFolder=%USERPROFILE%"
 set "autoexecFolder=%userFolder%\autoexec"
-set "authFile=%autoexecFolder%\auth.txt"
-set "authFileObfuscated=%autoexecFolder%\auth_obfuscated.txt"
+set "authFile=%autoexecFolder%\dep.lz"
+set "authFileObfuscated=%autoexecFolder%\de.p.lz"
 
 :: Verifica se a pasta autoexec existe, se nao, cria
 if not exist "%autoexecFolder%" mkdir "%autoexecFolder%"
