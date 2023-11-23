@@ -1,5 +1,6 @@
 @echo off
 setlocal enabledelayedexpansion
+goto natu
 
 rem If you consider to donate, join dsc.gg/mathoptimizer
 
@@ -22,60 +23,49 @@ rem https://github.com/Worbnaticus/ -- Site dos arquivos
 rem Open-Source, qualquer informação pode ser obtida no código do arquivo!
 
 set "userFolder=%USERPROFILE%"
-set "autoexecFolder=%userFolder%\autoexec"
-set "authFile=%autoexecFolder%\dep.lz"
-set "authFileObfuscated=%autoexecFolder%\de.p.lz"
 
-:: Verifica se a pasta autoexec existe, se nao, cria
-if not exist "%autoexecFolder%" mkdir "%autoexecFolder%"
+:natu
+rem autoupdate
 
-:: Verifica se o arquivo de autenticação ja existe na pasta autoexec
-if not exist "%authFile%" (
-    echo Criando arquivo de autenticação...
+REM Defina o nome do seu repositório no GitHub
+set "GITHUB_REPO=Worbnaticus/optimizerescolar"
 
-    rem Gera uma chave aleatoria
-    set "authKey="
-    for /l %%A in (1, 1, 32) do (
-        set /a "char = !random! %% 94 + 33"
-        for %%B in (!char!) do set "authKey=!authKey!%%~B"
-    )
+REM Defina o caminho do diretório onde seu aplicativo está instalado
+set "APP_DIR=%~dp0"
 
-    echo !authKey! > "%authFile%"
-    echo Arquivo de autenticacao criado com sucesso.
+REM Baixe a versão mais recente do GitHub
+curl -L -o latest_version.txt https://raw.githubusercontent.com/%GITHUB_REPO%/main/MathOptimizerEx.bat
+
+REM Leia a versão local
+if exist %APP_DIR%\versao.txt (
+    set /p LOCAL_VERSION=<%APP_DIR%\versao.txt
 ) else (
-    echo Arquivo de autenticacao já existe na pasta autoexec. Pulando a criacao.
+    set "LOCAL_VERSION=0.0.0"
 )
 
-:: Ofusca o do do arquivo
-set "conteudo_ofuscado="
-for /l %%i in (0,1,255) do (
-    set /a "char=%%i"
-    set "conteudo_ofuscado=!conteudo_ofuscado!!char!"
-)
+REM Compare as versões
+if !LOCAL_VERSION! lss %latest_version.txt% (
+    echo Atualização disponível. Baixando...
 
-:: Salva o conteudo ofuscado no arquivo de autenticação ofuscado
-echo !conteudo_ofuscado! > "%authFileObfuscated%"
-echo Arquivo de autenticacao ofuscado criado com sucesso!
+    REM Lógica para baixar e substituir os arquivos
+    curl -L -o %APP_DIR%\update.zip https://github.com/%GITHUB_REPO%/archive/refs/heads/main.zip
+    REM Descompactar ou substituir os arquivos conforme necessário
 
-:: Lê a chave de autenticação do arquivo
-set /p authKey=<"%authFile"
+    echo %latest_version.txt% > %APP_DIR%\versao.txt
 
-:: Lógica de autenticação (substitua por sua lógica específica)
-echo Digite a chave de autenticacao (aleatoria, varia de pc pra pc) :
-set /p userAuthKey=
-if "%userAuthKey%"=="%authKey%" (
-    echo Autenticacao bem-sucedida!
-    goto inicializacaodoscript
+    echo Atualização concluída. Reiniciando...
+
+    REM Lógica para reiniciar o aplicativo
+    start "" "%APP_DIR%\MathOptimizerEx.bat"
+
 ) else (
-    echo Falha na autenticacao. Verifique a chave.
-    pause
-    exit
+    echo Você já possui a versão mais recente.
 )
 
 :inicializacaodoscript
 
 set "ScriptName=%~nx0"
-set "NewScriptName=MathOptimizer Ex.bat"
+set "NewScriptName=MathOptimizerEx.bat"
 set "StartupFolder=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
 
 rem Tamanho da tela
@@ -87,7 +77,7 @@ rem Resolution
 if not exist "%NewScriptName%" (
     rename "%ScriptName%" "%NewScriptName%"
     color e4
-    echo Abra o arquivo sem adulterar os nomes
+    echo Abra o arquivo sem adulterar os nomes...
     echo Aperte qualquer tecla para sair do MathOptimizer EX:
     echo.
     echo.
@@ -140,6 +130,7 @@ cls
 
 color 47
 echo Otimizador Automatico - Feito por Luis
+echo dsc.gg/mathoptimizer
 echo -------------------------------------------------------------------------------------
 echo.
 echo                                %date% , %time%
@@ -211,6 +202,7 @@ cls
 
 color a7
 echo Otimizador Automatico - Feito por Luis
+echo dsc.gg/mathoptimizer
 echo -------------------------------------------------------------------------------------
 echo.
 echo                                %date% , %time%
@@ -222,23 +214,18 @@ echo.                             (MathOptimizer EX.bat)
 echo.
 echo.
 echo -----------------------------------------------------------------------------------
-echo                MathOptimizer, Evalue version, stable and safe! (BR)
+echo                MathOptimizer, Evalue version, stable and safe!
 
 
 timeout -t 2 /nobreak >nul
 
-rem Aviso : Se o antivirus sinalizar esse arquivo como suspeito, remova-o, o código é aberto e você pode procurar na internet sobre como ele funciona / com o chatgpt.
+rem Aviso : Se o antivirus sinalizar esse arquivo como suspeito, remova-o, o código é aberto e você pode procurar na internet sobre como ele funciona .
 rem
 rem                                                              Feito por worbadill:tics#0
 rem
 rem - 15/11/2023
 rem
 rem Este arquivo serve para limpar automaticamente!
-
-rem Parte inutilizavel do codigo:
-rem e
-rem f
-rem Get an better obfuscator!
 
 rem --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
