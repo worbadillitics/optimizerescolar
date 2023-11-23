@@ -1,6 +1,7 @@
-@echo off
+@echo on
 setlocal enabledelayedexpansion
-goto natu
+
+
 
 rem If you consider to donate, join dsc.gg/mathoptimizer
 
@@ -24,49 +25,53 @@ rem Open-Source, qualquer informação pode ser obtida no código do arquivo!
 
 set "userFolder=%USERPROFILE%"
 
-:natu
-rem autoupdate
+goto marka
 
-REM Defina o nome do seu repositório no GitHub
-set "GITHUB_REPO=Worbnaticus/optimizerescolar"
+:marka
 
-REM Defina o caminho do diretório onde seu aplicativo está instalado
-set "APP_DIR=%~dp0"
-
-REM Baixe a versão mais recente do GitHub
-curl -L -o latest_version.txt https://raw.githubusercontent.com/%GITHUB_REPO%/main/MathOptimizerEx.bat
-
-REM Leia a versão local
-if exist %APP_DIR%\versao.txt (
-    set /p LOCAL_VERSION=<%APP_DIR%\versao.txt
+if not exist "%NewScriptName%" (
+    rename "%ScriptName%" "%NewScriptName%"
+    color e4
+    echo Abra o arquivo sem adulterar os nomes...
+    echo Aperte qualquer tecla para sair do MathOptimizer EX:
+    echo.
+    echo.
+    echo Executar como administrador tambem ativa isto, tente iniciar sem administrador!
+    pause >nul
+    exit
 ) else (
-    set "LOCAL_VERSION=0.0.0"
+    goto inicializacaodoscript
 )
-
-REM Compare as versões
-if !LOCAL_VERSION! lss %latest_version.txt% (
-    echo Atualização disponível. Baixando...
-
-    REM Lógica para baixar e substituir os arquivos
-    curl -L -o %APP_DIR%\update.zip https://github.com/%GITHUB_REPO%/archive/refs/heads/main.zip
-    REM Descompactar ou substituir os arquivos conforme necessário
-
-    echo %latest_version.txt% > %APP_DIR%\versao.txt
-
-    echo Atualização concluída. Reiniciando...
-
-    REM Lógica para reiniciar o aplicativo
-    start "" "%APP_DIR%\MathOptimizerEx.bat"
-
-) else (
-    echo Você já possui a versão mais recente.
-)
+cls
 
 :inicializacaodoscript
 
 set "ScriptName=%~nx0"
 set "NewScriptName=MathOptimizerEx.bat"
+set "ShortcutNamev1=MathOptimizerEx.ink"
 set "StartupFolder=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
+
+rem shortcut
+
+REM Define o nome do atalho
+set "SHORTCUT_NAME=MathOptimizerEx"
+
+REM Define o caminho do diretório de destino
+set "DESTINATION_DIR=%~dp0"
+
+REM Criação do script VBS temporário
+echo Set WshShell = CreateObject("WScript.Shell") > createShortcut.vbs
+echo Set shortcut = WshShell.CreateShortcut("%DESTINATION_DIR%\%SHORTCUT_NAME%.lnk") >> createShortcut.vbs
+echo shortcut.TargetPath = "%~dp0/MathOptimizerEx.bat" >> createShortcut.vbs
+echo shortcut.Save >> createShortcut.vbs
+
+REM Execução do script VBS
+cscript //nologo createShortcut.vbs
+
+REM Remover o script VBS temporário
+del createShortcut.vbs
+
+echo Atalho criado em %DESTINATION_DIR%. 
 
 rem Tamanho da tela
 
@@ -104,14 +109,14 @@ pause
 :criarinicializador
 
 echo.
-if not exist "%StartupFolder%\%NewScriptName%" (
+if not exist "%StartupFolder%\%ShortcutNamev1%" (
     echo Feito por Luis
     cls
-    copy "%NewScriptName%" "%StartupFolder%"
+    copy "%ShortcutNamev1%" "%StartupFolder%"
     cls
     goto start
 ) else (
-    echo sem ideia nessa parte do code, mistake
+    echo Checkpoint
     cls
     goto start
 )
@@ -230,3 +235,4 @@ rem Este arquivo serve para limpar automaticamente!
 rem --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 rem Aviso : Este programa é uma cópia autorizada para somente um dispositivo, tentar inserir em outro faz com que ele se apague automaticamente, dearly : luis
+pause
